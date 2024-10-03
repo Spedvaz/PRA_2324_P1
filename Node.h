@@ -2,7 +2,7 @@
 
 template <typename T>
  
-class Node {
+class Node{
     public:
  		T data;
 		Node<T>* next;
@@ -22,6 +22,11 @@ Node<T>::Node(T data, Node<T>* next){
 template <typename T>
 
 std::ostream& operator<<(std::ostream &out, const Node<T> &node){
-	out << node.data << " ";
+	Node<T>* current = &node;	
+
+	while(current != nullptr){
+	out << current->data << " ";
+	current = current->next;
 	return out;
+	}
 }
