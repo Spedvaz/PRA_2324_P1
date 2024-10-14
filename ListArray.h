@@ -114,7 +114,7 @@ T ListArray<T>::remove(int pos){
 template <typename T>
 
 T ListArray<T>::get(int pos){
-	if( pos < 0 || pos > size-1){
+	if( pos < 0 || pos > size()-1){
 		throw std::out_of_range("La posición está fuera de rango");
 	}else{
 		return arr[pos];
