@@ -131,7 +131,7 @@ template <typename T>
 T ListLinked<T>::get(int pos){
 Node<T>* current = first;
 
-    if( pos < 0 || pos > size-1){
+    if( pos < 0 || pos > size()-1){
         throw std::out_of_range("La posición está fuera de rango");
     }else{
         for(int i = 0; i < pos; i++){
@@ -149,8 +149,8 @@ template <typename T>
 int ListLinked<T>::search(T e){
     Node<T>* current = first;
 
-	while(current =! nullptr){
-            if(current == e){
+	while(current != nullptr){
+            if(current->data == e){
                 return n;
             }                                  // Node* current = first; otra manera preguntar a jorge
 		current = current->next;
