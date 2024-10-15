@@ -14,8 +14,17 @@ class ListLinked : public List<T> {
 		~ListLinked();
 		T operator[](int pos);
 		
-		template <typename U>
-		friend std::ostream& operator<<(std::ostream& out, const ListLinked<T> &list);
+
+		friend std::ostream& operator<<(std::ostream& out, const ListLinked<T> &list){
+			Node<T>* current = list.first;
+			while(current != nullptr){
+				out << current->data << " ";
+				current = current->next;
+			}
+			return out;
+		}
+
+	
 		void insert(int pos, T e) override final;
 		void append(T e) override final;
 		void prepend(T e) override final;
@@ -24,8 +33,8 @@ class ListLinked : public List<T> {
 		int search(T e) override final;
 		bool empty() override final;
 		int size() override final;
+		
 };      
-
 
 template <typename T>
 
@@ -53,39 +62,46 @@ T ListLinked<T>::operator[](int pos){
 	if(pos < 0 || pos > ListLinked::size()-1){
 		throw std::out_of_range("La posicion esta fuera de rango");
 	}else{
-		return pos;
+		Node<T>* current = first;
+		int i = 0;
+		while(current != nullptr && i < pos){
+			current = current->next;
+			i++;
+		}
+		return current->data;
 	}
 }
 
-template <typename T>
-
-std::ostream& operator<<(std::ostream& out, const ListLinked<T> &list){
-	Node<T>* current = list.first;
-	while(current != nullptr){
-		out << current->data << " ";
-		current == current->next;
-	}
-	return out;	
-}
 
 template <typename T>
-
 void ListLinked<T>::insert(int pos, T e){
-    Node<T>* current = first;
+    
 	if(pos < 0 || pos > size()){
         throw std::out_of_range("No esta en rango");
     }else{
-        for(int i = 0; i < pos; i++){
-			current = current->next;
+		Node<T>* newNode = new Node<T>{e, nullptr};
+		if(pos == 0){
+			newNode->next = first;
+			first = newNode;
+		}else{
+			Node<T>* prev = nullptr;
+			Node<T>* current = first;
+			int i = 0;
+			while(current != nullptr && i < pos){
+				prev = current;
+				current = current->next;
+				i++;
+			}
+			prev->next = newNode;
+			newNode->next = current;
 		}
-		current->data = e;
     }
 }
 
 template <typename T>
 
 void ListLinked<T>::append(T e){
-    insert(n, e);
+    insert(size(), e);
 }
 
 template <typename T>
@@ -99,48 +115,41 @@ template <typename T>
 T ListLinked<T>::remove(int pos){
    Node<T>* current = first;
 
-	 if( pos < 0 || pos > size()-1){
+	if( pos < 0 || pos > size()-1){
         throw std::out_of_range("La posición está fuera de rango");
-    }else{
-        if(current == nullptr){
-			std::cout<<"La lista esta vacia"<<std::endl;
-			return -1;
-		}else{
-			if(pos == 0){
-				int data = current->data;
-				current = current->next;
-				delete[] current;
-				return data;
-			}
-			for(int i = 0; current != nullptr && i < pos;i++){
-				current = current -> next;
-				if(i == pos){
-					Node<T>* eliminar = current;
-					int data = eliminar->data;
-					current = eliminar->next;
-					delete[] eliminar;
-					return data;	
-				}
-			} 			 	
+	}else{
+        Node<T>* prev = nullptr;
+		Node<T>* current = first;
+		int i = 0;
+		while(current != nullptr && i < pos){
+			prev = current;
+			current = current->next;
+			i++;
 		}
+		if(prev != nullptr){
+			prev->next = current->next;
+		}else{
+			first = current->next;
+		}
+		T data = current->data;
+		delete current;
+		return data;
     }
 }
 
 template <typename T>
 
 T ListLinked<T>::get(int pos){
-Node<T>* current = first;
-
+	Node<T>* current = first;
+	int i = 0;
     if( pos < 0 || pos > size()-1){
         throw std::out_of_range("La posición está fuera de rango");
     }else{
-        for(int i = 0; i < pos; i++){
+		while(current != nullptr && i < pos){
 			current = current->next;
-			if(i == pos){
-				int data = current->data;
-				return data;
-			}
+			i++;
 		}
+	return current->data;
     }
 }
 
@@ -148,13 +157,13 @@ template <typename T>
 
 int ListLinked<T>::search(T e){
     Node<T>* current = first;
-
+	int i = 0;
 	while(current != nullptr){
             if(current->data == e){
-                return n;
-            }                                  // Node* current = first; otra manera preguntar a jorge
+                return i;
+            }                                
 		current = current->next;
-		n++;
+		i++;
     }
 
     return -1;
@@ -163,7 +172,7 @@ int ListLinked<T>::search(T e){
 template <typename T>
 
 bool ListLinked<T>::empty(){
-    if(n == 0){
+    if(first == nullptr){
         return true;
     }
     return false;
@@ -172,5 +181,11 @@ bool ListLinked<T>::empty(){
 template <typename T>
 
 int ListLinked<T>::size(){
-    return n;
+    Node<T>* current = first;
+	int i = 0;
+	while(current != nullptr){
+		current = current->next;
+		i++;
+	}
+	return i;
 }
