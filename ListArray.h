@@ -4,6 +4,7 @@
 template <typename T> 
 class ListArray : public List<T> {
 
+
     private:
 	void resize(int new_size);
 	T* arr;
